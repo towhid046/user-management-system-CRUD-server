@@ -21,6 +21,10 @@ const client = new MongoClient(uri, {
   },
 });
 
+app.get('/', ()=>{
+  res.send('User management server is running')
+})
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
