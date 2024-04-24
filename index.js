@@ -21,33 +21,33 @@ const client = new MongoClient(uri, {
   },
 });
 
-app.get('/', ()=>{
-  res.send('User management server is running')
-})
-
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const allUserCollection = client.db("allUsersDB").collection("allUsers");
     const customersCollection = client
       .db("customersDB")
       .collection("customers");
 
-    app.get("/all-users", async (req, res) => {
+    app.get("/", async(req, res) => {
+      res.send("User management server is running");
+    });
+
+    app.get("/users", async (req, res) => {
       const cursor = allUserCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
 
-    app.get("/all-users/:id", async (req, res) => {
+    app.get("/users/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await allUserCollection.findOne(query);
       res.send(result);
     });
 
-    app.post("/all-users", async (req, res) => {
+    app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await allUserCollection.insertOne(user);
       res.send(result);
@@ -69,7 +69,7 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/all-users/:id", async (req, res) => {
+    app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await allUserCollection.deleteOne(query);
@@ -105,7 +105,7 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
